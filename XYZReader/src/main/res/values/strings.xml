@@ -8,5 +8,8 @@
     <string name="action_share">Share</string>
 
     <string name="up">Up</string>
+    <string name="empty_label">Empty</string>
+    <string name="error_message">Error reading item detail cursor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
 
 </resources>

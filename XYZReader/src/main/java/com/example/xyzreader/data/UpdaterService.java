@@ -27,6 +27,8 @@ public class UpdaterService extends IntentService {
             = "com.example.xyzreader.intent.action.STATE_CHANGE";
     public static final String EXTRA_REFRESHING
             = "com.example.xyzreader.intent.extra.REFRESHING";
+    public static final String BROADCAST_ACTION_NO_CONNECTIVITY
+            = "com.example.xyzreader.intent.action.NO_CONNECTIVITY";
 
     public UpdaterService() {
         super(TAG);
