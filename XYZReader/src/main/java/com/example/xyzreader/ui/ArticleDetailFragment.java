@@ -25,6 +25,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -103,6 +104,8 @@ public class ArticleDetailFragment extends Fragment implements
         if (Build.VERSION.SDK_INT >= 21) {
             getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -122,9 +125,22 @@ public class ArticleDetailFragment extends Fragment implements
                 .setDisplayHomeAsUpEnabled(true);
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar())
                 .setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
 
         bindViews();
         return mRootView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().finishAfterTransition();
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void startPostponedEnterTransition() {

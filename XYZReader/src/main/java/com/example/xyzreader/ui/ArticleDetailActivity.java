@@ -41,8 +41,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     @BindView(R.id.pager)
     ViewPager mPager;
-    @BindView(R.id.action_up)
-    ImageButton mBackButton;
 
     private MyPagerAdapter mPagerAdapter;
     private ArticleDetailFragment mCurrentDetailsFragment;
@@ -110,8 +108,6 @@ public class ArticleDetailActivity extends AppCompatActivity
                 }
             }
         });
-
-        mBackButton.setOnClickListener((view) -> finishAfterTransition());
     }
 
     @Override
@@ -138,8 +134,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-
-        // Select the start ID
         if (mStartId > 0) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -182,17 +176,5 @@ public class ArticleDetailActivity extends AppCompatActivity
         public int getCount() {
             return (mCursor != null) ? mCursor.getCount() : 0;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    finishAfterTransition();
-                    return true;
-                }
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
