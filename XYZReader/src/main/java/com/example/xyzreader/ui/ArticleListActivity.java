@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -59,7 +60,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
             if (mTmpReenterState != null) {
                 int startingPosition = mTmpReenterState.getInt(EXTRA_STARTING_ARTICLE_POSITION);
-                int currentPosition = mTmpReenterState.getInt(EXTRA_CURRENT_ARTICLE_POSITION );
+                int currentPosition = mTmpReenterState.getInt(EXTRA_CURRENT_ARTICLE_POSITION);
                 if (startingPosition != currentPosition) {
                     String newTransitionName = "transition_photo" + currentPosition;
                     View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
@@ -86,6 +87,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +140,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                 mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
-            }else if (UpdaterService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())){
+            } else if (UpdaterService.BROADCAST_ACTION_NO_CONNECTIVITY.equals(intent.getAction())) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(ArticleListActivity.this, "No network connection. Try again later", Toast.LENGTH_LONG).show();
             }
@@ -152,7 +154,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ArticleListAdapter adapter = new ArticleListAdapter(this ,cursor);
+        ArticleListAdapter adapter = new ArticleListAdapter(this, cursor);
         adapter.setHasStableIds(true);
         mRecyclerView.setAdapter(adapter);
 
@@ -170,7 +172,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onRefresh() {
         Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-
         startService(new Intent(this, UpdaterService.class));
     }
 
@@ -191,9 +192,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         mTmpReenterState = new Bundle(data.getExtras());
         int startingPosition = mTmpReenterState.getInt(EXTRA_STARTING_ARTICLE_POSITION);
         int currentPosition = mTmpReenterState.getInt(EXTRA_CURRENT_ARTICLE_POSITION);
-        if (startingPosition != currentPosition) {
-            mRecyclerView.scrollToPosition(currentPosition);
-        }
+        if (startingPosition != currentPosition)
+            new Handler().postDelayed(() -> mRecyclerView.scrollToPosition(currentPosition), 300);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             postponeEnterTransition();
